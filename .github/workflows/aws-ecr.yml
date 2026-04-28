@@ -1,4 +1,4 @@
-name: Build and Push to AWS ECR
+}name: Build and Deploy to AWS ECR + ECS
 
 on:
   push:
@@ -27,6 +27,10 @@ jobs:
       - name: Login en Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      # ========================
+      # BUILD Y PUSH
+      # ========================
+
       - name: Build y push servicio1
         run: |
           docker build -t servicio1 ./ucmcloud/servicio1
@@ -45,23 +49,27 @@ jobs:
           docker tag servicio3:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio3:latest
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio3:latest
 
-      - name: Actualizar servicio1 en AWS ECS
+      # ========================
+      # DEPLOY ECS
+      # ========================
+
+      - name: Actualizar servicio1 en ECS
         run: |
           aws ecs update-service \
           --cluster clusterr \
-          --service servicio1-task-service-mg7w51cm
+          --service servicio1-task-service-mg7w51cm \
           --force-new-deployment
 
-      - name: Actualizar Servicio2
+      - name: Actualizar servicio2 en ECS
         run: |
           aws ecs update-service \
           --cluster clusterr \
-          --service servicio2-task-service-w8wqvknj
+          --service servicio2-task-service-w8wqvknj \
           --force-new-deployment
 
-      - name: Actualizar Servicio3
+      - name: Actualizar servicio3 en ECS
         run: |
           aws ecs update-service \
           --cluster clusterr \
-          --service servicio3-task-service-6mfcr1tb
+          --service servicio3-task-service-6mfcr1tb \
           --force-new-deployment
