@@ -1,9 +1,13 @@
-name: Build and Push Docker Images to AWS ECR
+name: Build and Push to AWS ECR
 
 on:
   push:
     branches:
       - main
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ACCOUNT_ID: 190865905880
 
 jobs:
   build-and-push:
@@ -18,7 +22,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login en Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
@@ -26,17 +30,17 @@ jobs:
       - name: Build y push servicio1
         run: |
           docker build -t servicio1 ./ucmcloud/servicio1
-          docker tag servicio1:latest 190865905880.dkr.ecr.us-east-1.amazonaws.com/servicio1:latest
-          docker push 190865905880.dkr.ecr.us-east-1.amazonaws.com/servicio1:latest
+          docker tag servicio1:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio1:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio1:latest
 
       - name: Build y push servicio2
         run: |
           docker build -t servicio2 ./ucmcloud/servicio2
-          docker tag servicio2:latest 190865905880.dkr.ecr.us-east-1.amazonaws.com/servicio2:latest
-          docker push 190865905880.dkr.ecr.us-east-1.amazonaws.com/servicio2:latest
+          docker tag servicio2:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio2:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio2:latest
 
       - name: Build y push servicio3
         run: |
           docker build -t servicio3 ./ucmcloud/servicio3
-          docker tag servicio3:latest 190865905880.dkr.ecr.us-east-1.amazonaws.com/servicio3:latest
-          docker push 190865905880.dkr.ecr.us-east-1.amazonaws.com/servicio3:latest
+          docker tag servicio3:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio3:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio3:latest
