@@ -44,3 +44,24 @@ jobs:
           docker build -t servicio3 ./ucmcloud/servicio3
           docker tag servicio3:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio3:latest
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/servicio3:latest
+
+      - name: Actualizar servicio1 en AWS ECS
+        run: |
+          aws ecs update-service \
+          --cluster clusterr \
+          --service servicio1-task-service-mg7w51cm
+          --force-new-deployment
+
+      - name: Actualizar Servicio2
+        run: |
+          aws ecs update-service \
+          --cluster clusterr \
+          --service servicio2-task-service-w8wqvknj
+          --force-new-deployment
+
+      - name: Actualizar Servicio3
+        run: |
+          aws ecs update-service \
+          --cluster clusterr \
+          --service servicio3-task-service-6mfcr1tb
+          --force-new-deployment
